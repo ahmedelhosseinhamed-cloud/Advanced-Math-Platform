@@ -1,0 +1,2045 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>📐 Advanced Math — Question Bank</title>
+
+<!-- Google Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<!-- ① KaTeX — High-performance math rendering -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js"></script>
+<!-- KaTeX Auto-render extension: automatically finds and renders math delimiters -->
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js"
+  onload="window._katexReady = true; if(window._katexReadyCb) window._katexReadyCb();"></script>
+
+<style>
+/* ══════════════════════════════════════════════════════
+   DESIGN TOKENS — Deep Purple Theme
+   ══════════════════════════════════════════════════════ */
+:root {
+  --purple-deep:    #0f0c29;
+  --purple-mid:     #302b63;
+  --purple-dark:    #24243e;
+  --purple-accent:  #7c3aed;
+  --purple-light:   #a78bfa;
+  --purple-lighter: #c4b5fd;
+  --purple-faint:   #ede9fe;
+  --purple-card:    rgba(30,10,74,0.9);
+  --green:          #22c55e;
+  --green-light:    #86efac;
+  --red:            #f43f5e;
+  --blue:           #4f8ef7;
+  --amber:          #f59e0b;
+  --violet:         #a855f7;
+  --text:           #e8e0f0;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  min-height: 100vh;
+  background: linear-gradient(135deg, var(--purple-deep) 0%, var(--purple-mid) 50%, var(--purple-dark) 100%);
+  font-family: 'DM Sans', sans-serif;
+  color: var(--text);
+}
+
+/* ── GLOBAL PROGRESS BAR (top of page, tracks quiz history) ── */
+#globalProgressWrap {
+  position: sticky;
+  top: 0;
+  z-index: 500;
+  height: 5px;
+  background: rgba(255,255,255,0.07);
+  overflow: hidden;
+}
+#globalProgressFill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--purple-accent), var(--purple-light), var(--green));
+  transition: width 0.6s ease;
+  width: 0%;
+}
+
+/* ── HEADER ── */
+.header {
+  background: linear-gradient(90deg, #1a0533 0%, #2d1b69 50%, #1a0533 100%);
+  border-bottom: 2px solid var(--purple-accent);
+  padding: 28px 32px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+.header-sub  { font-size: 11px; letter-spacing: 4px; color: var(--purple-light); text-transform: uppercase; margin-bottom: 6px; }
+.header h1   { font-family: 'Playfair Display', serif; font-size: clamp(22px,4vw,36px); font-weight: 900; color: #fff; letter-spacing: -1px; }
+.header-desc { font-size: 13px; color: var(--purple-lighter); margin-top: 4px; }
+.pills       { display: flex; gap: 10px; flex-wrap: wrap; }
+.pill        { border-radius: 20px; padding: 4px 12px; font-size: 12px; font-weight: 700; }
+
+/* ── STATS ROW (best score display) ── */
+.stats-row {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  flex-wrap: wrap;
+  padding: 10px 32px;
+  background: rgba(15,12,41,0.6);
+  border-bottom: 1px solid rgba(124,58,237,0.2);
+  font-size: 13px;
+  color: var(--purple-light);
+}
+.stat-badge {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(124,58,237,0.15);
+  border: 1px solid rgba(124,58,237,0.3);
+  border-radius: 8px;
+  padding: 4px 12px;
+  font-weight: 600;
+}
+.stat-badge .stat-icon { font-size: 15px; }
+.stat-badge .stat-val  { color: var(--purple-lighter); }
+.stat-badge.gold       { border-color: rgba(245,158,11,0.5); background: rgba(245,158,11,0.1); }
+.stat-badge.gold .stat-val { color: var(--amber); }
+
+/* ── FILTERS ── */
+.filters {
+  padding: 20px 24px 12px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+}
+.search-box {
+  background: rgba(255,255,255,0.07);
+  border: 1px solid rgba(124,58,237,0.4);
+  border-radius: 10px;
+  padding: 9px 16px;
+  color: var(--text);
+  font-size: 14px;
+  outline: none;
+  min-width: 220px;
+  flex: 1;
+  font-family: 'DM Sans', sans-serif;
+  transition: border-color 0.2s;
+}
+.search-box:focus       { border-color: var(--purple-accent); }
+.search-box::placeholder { color: rgba(167,139,250,0.6); }
+
+select {
+  background: #1e0a4a;
+  border: 1px solid rgba(124,58,237,0.4);
+  border-radius: 10px;
+  padding: 9px 14px;
+  color: var(--text);
+  font-size: 13px;
+  cursor: pointer;
+  font-family: 'DM Sans', sans-serif;
+  outline: none;
+  transition: border-color 0.2s;
+}
+select:focus { border-color: var(--purple-accent); }
+
+.btn-quiz {
+  background: linear-gradient(135deg,#7c3aed,#a855f7);
+  border: none;
+  border-radius: 10px;
+  padding: 9px 20px;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 4px 15px rgba(124,58,237,0.4);
+  font-family: 'DM Sans', sans-serif;
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+.btn-quiz:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(124,58,237,0.5); }
+
+/* ④ Print button */
+.btn-print {
+  background: linear-gradient(135deg, #0f766e, #0d9488);
+  border: none;
+  border-radius: 10px;
+  padding: 9px 20px;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 4px 15px rgba(20,184,166,0.35);
+  font-family: 'DM Sans', sans-serif;
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+.btn-print:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(20,184,166,0.5); }
+
+.count-label { font-size: 13px; color: var(--purple-light); margin-left: auto; }
+
+/* ── GRID ── */
+.grid {
+  padding: 8px 24px 40px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(340px,1fr));
+  gap: 16px;
+}
+
+/* ── CARD ── */
+.card {
+  background: linear-gradient(135deg, rgba(30,10,74,0.9), rgba(45,27,105,0.7));
+  border-radius: 14px;
+  padding: 18px 20px;
+  cursor: pointer;
+  transition: transform 0.15s, box-shadow 0.15s;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.3);
+  position: relative; /* needed for hint positioning */
+}
+.card:hover { transform: translateY(-2px); }
+
+.card-top    { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; }
+.card-badges { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; }
+.badge       { border-radius: 6px; padding: 2px 9px; font-size: 11px; font-weight: 700; }
+.badge-level { background: rgba(255,255,255,0.07); color: var(--purple-light); }
+.card-id     { font-size: 11px; color: #6b5fa6; }
+.card-topic  { font-size: 13px; color: var(--purple-lighter); margin-bottom: 10px; }
+.card-question { font-size: clamp(13px,2vw,15px); color: var(--purple-faint); line-height: 1.65; font-weight: 500; }
+
+.options-list { margin-top: 10px; display: flex; flex-direction: column; gap: 4px; }
+.option-item  { font-size: 12px; color: #9a8fc0; padding: 2px 0; }
+.option-letter { color: var(--purple-accent); margin-right: 6px; }
+
+.btn-reveal {
+  margin-top: 14px;
+  border-radius: 8px;
+  padding: 6px 14px;
+  font-size: 12px;
+  cursor: pointer;
+  font-weight: 600;
+  font-family: 'DM Sans', sans-serif;
+  transition: all 0.2s;
+}
+.btn-reveal.hidden { background: rgba(124,58,237,0.15); border: 1px solid rgba(124,58,237,0.33); color: var(--purple-lighter); }
+.btn-reveal.shown  { background: rgba(34,197,94,0.15);  border: 1px solid rgba(34,197,94,0.33);  color: var(--green-light); }
+
+.answer-box {
+  margin-top: 10px;
+  background: rgba(34,197,94,0.08);
+  border: 1px solid rgba(34,197,94,0.25);
+  border-radius: 8px;
+  padding: 10px 14px;
+  color: var(--green-light);
+  font-size: 13px;
+  line-height: 1.7;
+}
+
+/* ── EMPTY STATE ── */
+.empty      { grid-column: 1/-1; text-align: center; padding: 60px 20px; color: #6b5fa6; }
+.empty-icon { font-size: 48px; }
+.empty-text { font-size: 18px; margin-top: 12px; }
+
+/* ══════════════════════════════════════════════════════
+   ② HINT SYSTEM
+   ══════════════════════════════════════════════════════ */
+.hint-btn {
+  background: rgba(245,158,11,0.12);
+  border: 1px solid rgba(245,158,11,0.35);
+  color: var(--amber);
+  border-radius: 7px;
+  padding: 3px 10px;
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: 'DM Sans', sans-serif;
+  transition: all 0.2s;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+.hint-btn:hover {
+  background: rgba(245,158,11,0.22);
+  transform: translateY(-1px);
+}
+.hint-card {
+  margin-top: 10px;
+  background: linear-gradient(135deg, rgba(245,158,11,0.10), rgba(245,158,11,0.05));
+  border: 1px solid rgba(245,158,11,0.3);
+  border-radius: 9px;
+  padding: 10px 14px;
+  color: #fcd34d;
+  font-size: 12.5px;
+  line-height: 1.65;
+  animation: fadeSlideIn 0.25s ease;
+}
+.hint-card-label {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  color: var(--amber);
+  text-transform: uppercase;
+  margin-bottom: 5px;
+  display: block;
+}
+@keyframes fadeSlideIn {
+  from { opacity: 0; transform: translateY(-6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ══════════════════════════════════════════════════════
+   QUIZ MODAL
+   ══════════════════════════════════════════════════════ */
+.modal-overlay {
+  position: fixed; inset: 0;
+  background: rgba(10,5,25,0.93);
+  z-index: 1000;
+  display: flex; align-items: center; justify-content: center;
+  padding: 20px;
+}
+.modal-box {
+  background: linear-gradient(135deg, #1e0a4a, #2d1b69);
+  border: 2px solid var(--purple-accent);
+  border-radius: 20px;
+  padding: 32px 28px;
+  max-width: 560px;
+  width: 100%;
+  box-shadow: 0 0 60px rgba(124,58,237,0.4);
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.quiz-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+  font-size: 13px;
+  color: var(--purple-light);
+  align-items: center;
+  gap: 8px;
+}
+.btn-exit { background: transparent; border: none; color: var(--red); cursor: pointer; font-size: 13px; font-family: 'DM Sans', sans-serif; }
+
+/* ③ TIMER display */
+.quiz-timer {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(244,63,94,0.12);
+  border: 1px solid rgba(244,63,94,0.3);
+  border-radius: 8px;
+  padding: 3px 10px;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--red);
+  transition: background 0.3s, border-color 0.3s;
+  min-width: 68px;
+  justify-content: center;
+}
+.quiz-timer.warn {
+  background: rgba(244,63,94,0.25);
+  border-color: rgba(244,63,94,0.6);
+  animation: pulse 0.7s infinite;
+}
+@keyframes pulse {
+  0%,100% { opacity: 1; }
+  50%      { opacity: 0.65; }
+}
+
+/* Quiz progress bar (inside modal) */
+.progress-bar-wrap { height: 5px; background: rgba(255,255,255,0.1); border-radius: 3px; margin-bottom: 18px; overflow: hidden; }
+.progress-bar-fill { height: 100%; background: linear-gradient(90deg, var(--purple-accent), var(--purple-light)); border-radius: 3px; transition: width 0.4s; }
+
+.quiz-tag { border-radius: 10px; padding: 6px 12px; margin-bottom: 16px; font-size: 12px; display: inline-block; }
+.quiz-question { font-size: clamp(15px,3vw,18px); font-weight: 600; color: #fff; margin-bottom: 20px; line-height: 1.6; }
+
+.mcq-options { display: flex; flex-direction: column; gap: 10px; }
+.mcq-btn {
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.15);
+  border-radius: 10px; padding: 12px 16px;
+  color: var(--text); cursor: pointer;
+  text-align: left; font-size: 14px;
+  transition: all 0.2s;
+  font-family: 'DM Sans', sans-serif;
+  width: 100%;
+}
+.mcq-btn:not([disabled]):hover { background: rgba(124,58,237,0.2); border-color: var(--purple-accent); }
+.mcq-btn.correct   { background: rgba(34,197,94,0.2)!important;  border: 1px solid var(--green)!important; }
+.mcq-btn.incorrect { background: rgba(244,63,94,0.2)!important;  border: 1px solid var(--red)!important; }
+.mcq-btn.selected  { background: rgba(124,58,237,0.3);            border: 1px solid var(--purple-accent); }
+
+.tf-options { display: flex; gap: 12px; }
+.tf-btn {
+  flex: 1;
+  border-radius: 10px; padding: 14px;
+  color: var(--text); cursor: pointer; font-size: 15px; font-weight: 700;
+  border: 1px solid rgba(255,255,255,0.15);
+  background: rgba(255,255,255,0.06);
+  font-family: 'DM Sans', sans-serif;
+  transition: all 0.2s;
+}
+.tf-btn:not([disabled]):hover { background: rgba(124,58,237,0.2); border-color: var(--purple-accent); }
+.tf-btn.correct   { background: rgba(34,197,94,0.2)!important;  border-color: var(--green)!important; }
+.tf-btn.incorrect { background: rgba(244,63,94,0.2)!important;  border-color: var(--red)!important; }
+
+.btn-primary {
+  display: block; width: 100%;
+  border: none; border-radius: 10px; padding: 12px;
+  color: #fff; cursor: pointer; font-size: 15px; font-weight: 700;
+  margin-top: 12px; font-family: 'DM Sans', sans-serif;
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+.btn-primary:hover  { transform: translateY(-1px); }
+.btn-next           { background: linear-gradient(135deg, var(--blue), #3b7fe8);         box-shadow: 0 4px 15px rgba(79,142,247,0.44); }
+.btn-reveal-quiz    { background: linear-gradient(135deg, var(--purple-accent), #9333ea); box-shadow: 0 4px 15px rgba(124,58,237,0.44); }
+.btn-back           { background: linear-gradient(135deg, var(--purple-accent), #9333ea); box-shadow: 0 4px 15px rgba(124,58,237,0.44); margin-top: 16px; }
+.btn-retry          { background: linear-gradient(135deg, var(--green), #16a34a);         box-shadow: 0 4px 15px rgba(34,197,94,0.35); margin-top: 10px; }
+
+.quiz-answer-box {
+  background: rgba(34,197,94,0.1);
+  border: 1px solid rgba(34,197,94,0.27);
+  border-radius: 10px; padding: 14px 16px;
+  color: var(--green-light); font-size: 14px; line-height: 1.7;
+  margin-top: 12px;
+}
+
+/* ── QUIZ HINT (inside modal) ── */
+.quiz-hint-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 12px;
+  background: rgba(245,158,11,0.1);
+  border: 1px solid rgba(245,158,11,0.3);
+  color: var(--amber);
+  border-radius: 8px;
+  padding: 7px 14px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: 'DM Sans', sans-serif;
+  transition: all 0.2s;
+  width: 100%;
+  justify-content: center;
+}
+.quiz-hint-btn:hover { background: rgba(245,158,11,0.2); }
+.quiz-hint-box {
+  margin-top: 10px;
+  background: linear-gradient(135deg, rgba(245,158,11,0.12), rgba(245,158,11,0.06));
+  border: 1px solid rgba(245,158,11,0.3);
+  border-radius: 9px;
+  padding: 12px 16px;
+  color: #fcd34d;
+  font-size: 13.5px;
+  line-height: 1.65;
+  animation: fadeSlideIn 0.25s ease;
+}
+
+/* ── FINISH SCREEN ── */
+.finish        { text-align: center; }
+.finish-icon   { font-size: 64px; }
+.finish h2     { color: var(--purple-light); margin: 12px 0 8px; font-family: 'Playfair Display', serif; }
+.finish-score  { font-size: 42px; font-weight: 900; color: #fff; }
+.finish-pct    { color: var(--purple-lighter); margin-top: 8px; }
+.finish-best   { margin-top: 14px; font-size: 14px; color: var(--amber); font-weight: 600; }
+.finish-detail {
+  margin-top: 16px;
+  background: rgba(255,255,255,0.04);
+  border-radius: 10px;
+  padding: 14px;
+  font-size: 13px;
+  color: var(--purple-light);
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  text-align: left;
+}
+.finish-detail span { color: var(--purple-lighter); font-weight: 600; }
+
+/* ══════════════════════════════════════════════════════
+   ⑤ PRINT / PDF STYLES
+   ══════════════════════════════════════════════════════ */
+@media print {
+  /* Hide all dark-theme UI */
+  #globalProgressWrap, .stats-row, .filters, #quizModal,
+  .btn-reveal, .btn-print, .btn-quiz,
+  .hint-btn, .hint-card,
+  .header { display: none !important; }
+
+  body {
+    background: #fff !important;
+    color: #111 !important;
+    font-family: 'DM Sans', Georgia, serif;
+  }
+
+  .print-header {
+    display: block !important;
+    text-align: center;
+    border-bottom: 2px solid #7c3aed;
+    padding-bottom: 12px;
+    margin-bottom: 20px;
+  }
+  .print-header h1  { font-size: 22px; color: #1a0533; font-family: 'Playfair Display', serif; }
+  .print-header p   { font-size: 12px; color: #666; margin-top: 4px; }
+
+  .grid {
+    display: block !important;
+    padding: 0 !important;
+  }
+
+  .card {
+    background: #fff !important;
+    border: 1px solid #d1c4e9 !important;
+    border-radius: 6px !important;
+    padding: 14px 16px !important;
+    margin-bottom: 12px !important;
+    box-shadow: none !important;
+    transform: none !important;
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+  .card-topic    { color: #5b21b6 !important; font-size: 11px !important; }
+  .card-question { color: #1a0533 !important; font-size: 13px !important; }
+  .card-id       { color: #999 !important; }
+  .badge         { border: 1px solid #ccc !important; color: #555 !important; background: #f3f3f3 !important; }
+  .badge-level   { color: #5b21b6 !important; }
+  .option-item   { color: #333 !important; }
+  .option-letter { color: #7c3aed !important; }
+  .answer-box    { display: none !important; } /* Hide answers on print sheet */
+
+  /* KaTeX math looks fine on white background — no overrides needed */
+}
+
+/* Print header is hidden on screen */
+.print-header { display: none; }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 600px) {
+  .header  { padding: 18px 16px 14px; }
+  .filters { padding: 14px 16px 8px; }
+  .grid    { padding: 8px 12px 40px; }
+  .modal-box { padding: 22px 16px; }
+  .stats-row { padding: 8px 16px; }
+}
+</style>
+</head>
+<body>
+
+<!-- ③ Global Progress Bar (tracks best score visually) -->
+<div id="globalProgressWrap">
+  <div id="globalProgressFill"></div>
+</div>
+
+<!-- HEADER -->
+<div class="header">
+  <div>
+    <div class="header-sub">Applied Technology Schools</div>
+    <h1>📐 Advanced Math</h1>
+    <div class="header-desc" id="headerDesc"></div>
+  </div>
+  <div class="pills" id="headerPills"></div>
+</div>
+
+<!-- ③ STATS ROW — Highest Score & Quiz Count from localStorage -->
+<div class="stats-row">
+  <div class="stat-badge gold" id="statBestScore">
+    <span class="stat-icon">🏆</span>
+    Best Score: <span class="stat-val" id="bestScoreVal">—</span>
+  </div>
+  <div class="stat-badge" id="statQuizCount">
+    <span class="stat-icon">📋</span>
+    Quizzes Taken: <span class="stat-val" id="quizCountVal">0</span>
+  </div>
+  <div class="stat-badge" id="statAvgScore">
+    <span class="stat-icon">📈</span>
+    Avg Score: <span class="stat-val" id="avgScoreVal">—</span>
+  </div>
+  <button id="resetStatsBtn" style="margin-left:auto;background:transparent;border:1px solid rgba(244,63,94,0.3);color:var(--red);border-radius:7px;padding:4px 12px;font-size:11px;cursor:pointer;font-family:'DM Sans',sans-serif;font-weight:600;">
+    Reset Stats
+  </button>
+</div>
+
+<!-- FILTERS -->
+<div class="filters">
+  <input class="search-box" id="searchInput" placeholder="🔍 Search questions..." />
+  <select id="topicFilter"></select>
+  <select id="typeFilter"></select>
+  <select id="levelFilter"></select>
+  <button class="btn-quiz" id="quizBtn">▶ Quiz Mode (<span id="filteredCount">0</span>)</button>
+  <!-- ⑤ Print button -->
+  <button class="btn-print" id="printBtn" title="Export filtered questions as a printable PDF">🖨 Print Sheet</button>
+  <div class="count-label" id="countLabel"></div>
+</div>
+
+<!-- ⑤ Print-only header (hidden on screen) -->
+<div class="print-header">
+  <h1>📐 Advanced Math — Practice Sheet</h1>
+  <p id="printSubtitle"></p>
+</div>
+
+<!-- QUESTION CARDS -->
+<div class="grid" id="grid"></div>
+
+<!-- QUIZ MODAL -->
+<div class="modal-overlay" id="quizModal" style="display:none;">
+  <div class="modal-box" id="quizBox"></div>
+</div>
+
+<script>
+/* ══════════════════════════════════════════════════════════════════════════════
+   DATA — questionBank (169 questions)
+   Each question may have an optional `hint` field.
+   KaTeX will auto-render any LaTeX notation found in question/answer/hint text.
+   Use $...$ for inline math or $$...$$ for block math.
+   ══════════════════════════════════════════════════════════════════════════════ */
+const questionBank = [
+  // ── GROUP 1: COMPLETE (Fill-in-the-Blank) ────────────────────────────────
+  { id:1,  type:"complete", level:"L1", topic:"Functions - Basic",
+    question:"If $f(x) = x - 6$, then $f(x) = 0$ when $x$ equals:",
+    answer:"$x = 6$",
+    hint:"Set $f(x) = 0$ and solve: $x - 6 = 0$." },
+
+  { id:2,  type:"complete", level:"L1", topic:"Functions - Basic",
+    question:"The set of all possible input values of a function is called the ___.",
+    answer:"Domain",
+    hint:"Think: what values can you 'plug in'?" },
+
+  { id:3,  type:"complete", level:"L1", topic:"Functions - Basic",
+    question:"The set of all output values of a function is called the ___.",
+    answer:"Range",
+    hint:"Think: what values come 'out' of the function?" },
+
+  { id:4,  type:"complete", level:"L1", topic:"Functions - Basic",
+    question:"For $R = \\{(1,6),(2,8),(3,9),(4,6)\\}$, $Y = \\{5,6,7,8,9\\}$: Domain = ___, Co-domain = ___, Range = ___",
+    answer:"Domain: $\\{1,2,3,4\\}$ | Co-domain: $\\{5,6,7,8,9\\}$ | Range: $\\{6,8,9\\}$",
+    hint:"Domain = all first elements; Co-domain = Y; Range = all second elements that actually appear." },
+
+  { id:5,  type:"complete", level:"L1", topic:"Functions - Basic",
+    question:"The degree of the constant function $f(x) = 7$ is ___.",
+    answer:"0",
+    hint:"A constant has no variable, so its degree is 0." },
+
+  { id:6,  type:"complete", level:"L1", topic:"Functions - Basic",
+    question:"Every ___ is a relation, but not every relation is a function.",
+    answer:"function",
+    hint:"A function has exactly one output per input — it's a special type of relation." },
+
+  { id:7,  type:"complete", level:"L1", topic:"Functions - Basic",
+    question:"The degree of $f(x) = x(x - 1) - 2x^2$ is ___.",
+    answer:"2",
+    hint:"Expand: $x^2 - x - 2x^2 = -x^2 - x$. Highest power is 2." },
+
+  { id:8,  type:"complete", level:"L1", topic:"Functions - Basic",
+    question:"If $f(x) = 4$, then $f(0) = $ ___.",
+    answer:"4",
+    hint:"A constant function always outputs the same value, regardless of input." },
+
+  { id:9,  type:"complete", level:"L2", topic:"Domain & Range",
+    question:"The Domain of a function is the set of all possible ___ values for which the function is defined.",
+    answer:"input (or x)",
+    hint:"Domain relates to the horizontal (x) axis." },
+
+  { id:10, type:"complete", level:"L2", topic:"Domain & Range",
+    question:"The Range of a function is the set of all possible ___ values that the function can produce.",
+    answer:"output (or y)",
+    hint:"Range relates to the vertical (y) axis." },
+
+  { id:11, type:"complete", level:"L2", topic:"Domain & Range",
+    question:"For $f(x) = \\sqrt{x - 5}$, the expression under the radical must be ___ than or equal to zero.",
+    answer:"Greater",
+    hint:"You cannot take the square root of a negative number. So $x - 5 \\geq 0$." },
+
+  { id:12, type:"complete", level:"L2", topic:"Domain & Range",
+    question:"In $f(x) = \\dfrac{1}{x+4}$, the domain excludes $x = $ ___ because it makes the denominator zero.",
+    answer:"$-4$",
+    hint:"Set the denominator equal to zero: $x + 4 = 0 \\Rightarrow x = -4$." },
+
+  { id:13, type:"complete", level:"L2", topic:"Domain & Range",
+    question:"The range of $f(x) = x^2 + 3$ is all real numbers greater than or equal to ___.",
+    answer:"3",
+    hint:"$x^2 \\geq 0$ always, so $x^2 + 3 \\geq 3$. Minimum value is 3." },
+
+  { id:14, type:"complete", level:"L2", topic:"Domain & Range",
+    question:"If a function's graph is a horizontal line $y = 5$, its range is the set ___.",
+    answer:"$\\{5\\}$",
+    hint:"A horizontal line always produces the same y-value." },
+
+  { id:15, type:"complete", level:"L2", topic:"Domain & Range",
+    question:"In interval notation, the set of all real numbers is represented as ___.",
+    answer:"$]-\\infty, +\\infty[$",
+    hint:"There is no restriction — all real numbers from negative to positive infinity." },
+
+  { id:16, type:"complete", level:"L3", topic:"Linear Functions",
+    question:"The general form of a linear function is ___.",
+    answer:"$F(x) = bx + c,\\; b \\neq 0$",
+    hint:"Linear means degree 1. The coefficient $b$ is the slope and must be non-zero." },
+
+  { id:17, type:"complete", level:"L3", topic:"Linear Functions",
+    question:"The graph of a constant function is parallel to the ___.",
+    answer:"X-axis",
+    hint:"$f(x) = c$ is always the same height — a horizontal line." },
+
+  { id:18, type:"complete", level:"L3", topic:"Linear Functions",
+    question:"If $f(x) = 7$, then the y-intercept is ___.",
+    answer:"$(0, 7)$",
+    hint:"The y-intercept is where $x = 0$. For $f(x) = 7$, $f(0) = 7$." },
+
+  { id:19, type:"complete", level:"L3", topic:"Linear Functions",
+    question:"If $f(x) = 4 - x$, then $f(0) = $ ___.",
+    answer:"4",
+    hint:"Substitute $x = 0$: $f(0) = 4 - 0 = 4$." },
+
+  { id:20, type:"complete", level:"L3", topic:"Linear Functions",
+    question:"If $f(x) = \\dfrac{2}{3}x - 2$, then the slope is ___.",
+    answer:"$\\dfrac{2}{3}$",
+    hint:"In $f(x) = bx + c$, the coefficient of $x$ is the slope." },
+
+  { id:21, type:"complete", level:"L4", topic:"Quadratic Functions",
+    question:"The general form of a quadratic function is $f(x) = $ ___ + ___ + ___.",
+    answer:"$ax^2 + bx + c$",
+    hint:"A quadratic has degree 2, so the leading term is $ax^2$ with $a \\neq 0$." },
+
+  { id:22, type:"complete", level:"L4", topic:"Quadratic Functions",
+    question:"The graph of a quadratic function is called a ___.",
+    answer:"Parabola",
+    hint:"All quadratic functions produce a U-shaped (or ∩-shaped) curve." },
+
+  { id:23, type:"complete", level:"L4", topic:"Quadratic Functions",
+    question:"If $a > 0$, the parabola opens ___.",
+    answer:"Upward",
+    hint:"Positive leading coefficient → opens upward (like a cup). Negative → opens downward." },
+
+  { id:24, type:"complete", level:"L4", topic:"Quadratic Functions",
+    question:"The vertex of $f(x) = ax^2 + bx + c$ occurs at $x = $ ___.",
+    answer:"$-\\dfrac{b}{2a}$",
+    hint:"Use the vertex formula: $x_v = -\\dfrac{b}{2a}$, then find $y_v = f(x_v)$." },
+
+  { id:25, type:"complete", level:"L4", topic:"Quadratic Functions",
+    question:"The axis of symmetry of a quadratic function in general form occurs at the line $x = $ ___.",
+    answer:"$-\\dfrac{b}{2a}$",
+    hint:"The axis of symmetry passes through the vertex." },
+
+  { id:26, type:"complete", level:"L4", topic:"Quadratic Functions",
+    question:"The domain of any quadratic function is ___.",
+    answer:"$\\mathbb{R}$ (all real numbers)",
+    hint:"You can substitute any real value of $x$ into $ax^2 + bx + c$." },
+
+  { id:27, type:"complete", level:"L4", topic:"Quadratic Functions",
+    question:"For $f(x) = x^2 - 4x + 3$, the vertex is at $x = $ ___.",
+    answer:"2",
+    hint:"Use $x_v = -b/(2a) = -(-4)/(2 \\cdot 1) = 4/2 = 2$." },
+
+  { id:28, type:"complete", level:"L4", topic:"Quadratic Functions",
+    question:"If $a < 0$, the parabola has a ___ at the vertex.",
+    answer:"Maximum",
+    hint:"When the parabola opens downward ($a < 0$), the vertex is the highest point." },
+
+  { id:29, type:"complete", level:"L4", topic:"Quadratic Functions",
+    question:"The range of $f(x) = 2x^2 + 3$ is ___.",
+    answer:"$[3, +\\infty[$",
+    hint:"Minimum value is at $x=0$: $f(0) = 3$. Since $a = 2 > 0$, range is $[3, +\\infty[$." },
+
+  { id:30, type:"complete", level:"L4", topic:"Quadratic Functions",
+    question:"The y-intercept of a quadratic function $ax^2 + bx + c$ is ___.",
+    answer:"$c$ or $(0, c)$",
+    hint:"Set $x = 0$: $f(0) = a(0)^2 + b(0) + c = c$." },
+
+  { id:31, type:"complete", level:"L5", topic:"Cubic Functions",
+    question:"The symmetric point of the graph of $f(x) = x^3$ is ___.",
+    answer:"$(0, 0)$",
+    hint:"All cubic functions $f(x) = (x-a)^3 + b$ are symmetric about the point $(a, b)$." },
+
+  { id:32, type:"complete", level:"L5", topic:"Cubic Functions",
+    question:"The symmetric point of the graph of $f(x) = x^3 + 2$ is ___.",
+    answer:"$(0, 2)$",
+    hint:"Shift of $+2$ means the center moves from $(0,0)$ to $(0,2)$." },
+
+  { id:33, type:"complete", level:"L5", topic:"Cubic Functions",
+    question:"The symmetric point of $f(x) = (x - 2)^3$ is ___.",
+    answer:"$(2, 0)$",
+    hint:"Horizontal shift of 2 units right moves the center to $(2, 0)$." },
+
+  { id:34, type:"complete", level:"L5", topic:"Cubic Functions",
+    question:"The symmetric point of $f(x) = (x + 1)^3 - 2$ is ___.",
+    answer:"$(-1, -2)$",
+    hint:"For $(x-a)^3 + b$, center is $(a, b)$. Here $a = -1, b = -2$." },
+
+  { id:35, type:"complete", level:"L5", topic:"Cubic Functions",
+    question:"The curve of $f(x) = x^3$ lies on the ___ and ___ quadrants.",
+    answer:"1st and 3rd",
+    hint:"$x > 0 \\Rightarrow f(x) > 0$ (Q1); $x < 0 \\Rightarrow f(x) < 0$ (Q3)." },
+
+  { id:36, type:"complete", level:"L6", topic:"Rational Functions",
+    question:"The simplest fractional function is ___.",
+    answer:"$F(x) = \\dfrac{1}{x}$",
+    hint:"This is the basic reciprocal function — the prototype of all rational functions." },
+
+  { id:37, type:"complete", level:"L6", topic:"Rational Functions",
+    question:"The symmetric point of $f(x) = \\dfrac{1}{x-a} + b$ is ___.",
+    answer:"$(a, b)$",
+    hint:"The function is shifted $a$ units right and $b$ units up from $\\frac{1}{x}$." },
+
+  { id:38, type:"complete", level:"L6", topic:"Rational Functions",
+    question:"The domain of $f(x) = \\dfrac{1}{x-4}$ is $\\mathbb{R} - \\{$ ___ $\\}$.",
+    answer:"4",
+    hint:"Set denominator $\\neq 0$: $x - 4 \\neq 0 \\Rightarrow x \\neq 4$." },
+
+  { id:39, type:"complete", level:"L6", topic:"Rational Functions",
+    question:"The curve of $f(x) = \\dfrac{1}{x}$ lies in the ___ and ___ quadrants.",
+    answer:"1st and 3rd",
+    hint:"For $x > 0$, $f(x) > 0$ (Q1). For $x < 0$, $f(x) < 0$ (Q3)." },
+
+  { id:40, type:"complete", level:"L6", topic:"Rational Functions",
+    question:"The symmetric point of $f(x) = \\dfrac{1}{x+2}$ is ___.",
+    answer:"$(-2, 0)$",
+    hint:"Rewrite as $\\frac{1}{x-(-2)} + 0$, so center is $(-2, 0)$." },
+
+  { id:41, type:"complete", level:"L7", topic:"Exponential Functions",
+    question:"The function $a^x$ is exponential if $a > $ ___ and $a \\neq $ ___.",
+    answer:"$0,\\; 1$",
+    hint:"Base must be positive (to stay real) and not 1 (otherwise it's constant)." },
+
+  { id:42, type:"complete", level:"L7", topic:"Exponential Functions",
+    question:"Domain of exponential function $a^x$ is ___.",
+    answer:"$\\mathbb{R}$",
+    hint:"You can raise a positive base to any real power." },
+
+  { id:43, type:"complete", level:"L7", topic:"Exponential Functions",
+    question:"Range of $a^x$ is ___.",
+    answer:"$y > 0\\;\\;(]0, +\\infty[)$",
+    hint:"Exponential values are always positive — they never reach zero or go negative." },
+
+  { id:44, type:"complete", level:"L7", topic:"Exponential Functions",
+    question:"If $a > 1$, the exponential function is ___.",
+    answer:"Increasing",
+    hint:"As $x$ increases, $a^x$ grows larger when $a > 1$." },
+
+  { id:45, type:"complete", level:"L7", topic:"Exponential Functions",
+    question:"If $0 < a < 1$, the exponential function is ___.",
+    answer:"Decreasing",
+    hint:"A base between 0 and 1 causes the function to decay as $x$ increases." },
+
+  { id:46, type:"complete", level:"L7", topic:"Exponential Functions",
+    question:"The function $f(x) = a^x$ intercepts the y-axis at point ___.",
+    answer:"$(0, 1)$",
+    hint:"$f(0) = a^0 = 1$ for any valid base $a$." },
+
+  { id:47, type:"complete", level:"L7", topic:"Exponential Functions",
+    question:"The function $f(x) = 3^x + k$ has a y-intercept at the point $(0, $ ___ $)$.",
+    answer:"$k + 1$",
+    hint:"$f(0) = 3^0 + k = 1 + k$." },
+
+  { id:48, type:"complete", level:"L7", topic:"Exponential Functions",
+    question:"The function $f(x) = a^{x+3}$ is shifted ___ units to the left.",
+    answer:"3",
+    hint:"Replacing $x$ with $x + c$ shifts the graph $c$ units to the left." },
+
+  // ── GROUP 2: MCQ (Multiple Choice) ────────────────────────────────────────
+  { id:49,  type:"mcq", level:"L1", topic:"Functions - Basic",
+    question:"Which of the following is a linear function?",
+    options:["$f(x) = x^2$","$f(x) = 2x + 3$","$f(x) = \\dfrac{1}{x}$","$f(x) = \\sqrt{x}$"],
+    answer:"$f(x) = 2x + 3$",
+    hint:"A linear function has degree 1 — look for $f(x) = bx + c$." },
+
+  { id:50,  type:"mcq", level:"L1", topic:"Functions - Basic",
+    question:"The range of $f(x) = x^2$ is:",
+    options:["$\\mathbb{R}$","$y \\geq 0$","$y \\leq 0$","$y < 0$"],
+    answer:"$y \\geq 0$",
+    hint:"Squaring any real number always gives a non-negative result." },
+
+  { id:51,  type:"mcq", level:"L1", topic:"Functions - Basic",
+    question:"If $f(x) = x + 5$, then $f(-4) = $",
+    options:["9","$-9$","5","1"],
+    answer:"1",
+    hint:"Substitute: $f(-4) = -4 + 5 = 1$." },
+
+  { id:52,  type:"mcq", level:"L1", topic:"Functions - Basic",
+    question:"Which of the following relations is NOT a function?",
+    options:["$\\{(1,3),(2,4),(3,5)\\}$","$\\{(1,3),(1,5),(2,4)\\}$","$\\{(0,0),(1,1),(2,4)\\}$","$\\{(-1,1),(-2,4)\\}$"],
+    answer:"$\\{(1,3),(1,5),(2,4)\\}$",
+    hint:"A function cannot have the same x-value mapped to two different y-values." },
+
+  { id:53,  type:"mcq", level:"L1", topic:"Functions - Basic",
+    question:"$f(x) = 2x^3 - 5x + 2$ is a polynomial of degree:",
+    options:["1","3","4","0"],
+    answer:"3",
+    hint:"The degree is the highest power of $x$, which is $x^3$." },
+
+  { id:54,  type:"mcq", level:"L1", topic:"Functions - Basic",
+    question:"A function $f$ is called a real function when:",
+    options:["domain and co-domain are any sets","both domain and co-domain are subsets of $\\mathbb{R}$","range = co-domain","it is a polynomial only"],
+    answer:"both domain and co-domain are subsets of $\\mathbb{R}$",
+    hint:"'Real' means both inputs and outputs are real numbers." },
+
+  { id:55,  type:"mcq", level:"L1", topic:"Functions - Basic",
+    question:"Which of the following graphs represents a function?",
+    options:["Circle","Horizontal line","Vertical line","Rectangle"],
+    answer:"Horizontal line",
+    hint:"Use the Vertical Line Test — a vertical line should hit the graph at most once." },
+
+  { id:56,  type:"mcq", level:"L1", topic:"Functions - Basic",
+    question:"Which does NOT represent $y$ as a function of $x$?",
+    options:["$y = 5x - 2$","$y = x^2 + 4$","$x^2 + y^2 = 25$","$y = |x|$"],
+    answer:"$x^2 + y^2 = 25$",
+    hint:"A circle fails the vertical line test — one $x$ gives two $y$ values." },
+
+  { id:57,  type:"mcq", level:"L2", topic:"Domain & Range",
+    question:"The set of all possible input values (x-values) for which a function is defined is called the:",
+    options:["Range","Intercept","Asymptote","Domain"],
+    answer:"Domain",
+    hint:"'Domain' = the allowed inputs. 'Range' = the resulting outputs." },
+
+  { id:58,  type:"mcq", level:"L2", topic:"Domain & Range",
+    question:"What is the domain of $f(x) = \\dfrac{1}{x - 5}$?",
+    options:["$\\mathbb{R}$","$\\mathbb{R} - \\{-5\\}$","$\\mathbb{R} - \\{5\\}$","$x > 5$"],
+    answer:"$\\mathbb{R} - \\{5\\}$",
+    hint:"Denominator cannot be zero: $x - 5 \\neq 0 \\Rightarrow x \\neq 5$." },
+
+  { id:59,  type:"mcq", level:"L2", topic:"Domain & Range",
+    question:"What is the range of $f(x) = x^2 + 4$?",
+    options:["$y \\leq 4$","$y \\geq 0$","$y \\geq 4$","$\\mathbb{R}$"],
+    answer:"$y \\geq 4$",
+    hint:"$x^2 \\geq 0$, so $x^2 + 4 \\geq 4$. Minimum is 4." },
+
+  { id:60,  type:"mcq", level:"L2", topic:"Domain & Range",
+    question:"Find the domain of $g(x) = \\sqrt{x + 3}$.",
+    options:["$x > -3$","$\\mathbb{R}$","$x \\geq -3$","$x \\geq 3$"],
+    answer:"$x \\geq -3$",
+    hint:"Need $x + 3 \\geq 0$, so $x \\geq -3$. At $x = -3$, we get $\\sqrt{0} = 0$, which is valid." },
+
+  { id:61,  type:"mcq", level:"L2", topic:"Domain & Range",
+    question:"If $f(x) = 7$ for all $x$, what is its range?",
+    options:["$\\mathbb{R}$","$\\{7\\}$","$\\{7, \\infty\\}$","$x = 7$"],
+    answer:"$\\{7\\}$",
+    hint:"A constant function only ever outputs one value." },
+
+  { id:62,  type:"mcq", level:"L2", topic:"Domain & Range",
+    question:"What is the domain of $h(x) = \\dfrac{x+1}{x^2 - 16}$?",
+    options:["$x \\neq 4$","$x \\neq 16$","$x \\neq 4$ and $x \\neq -4$","$x > 4$"],
+    answer:"$x \\neq 4$ and $x \\neq -4$",
+    hint:"Factor: $x^2 - 16 = (x-4)(x+4)$. Both roots are excluded." },
+
+  { id:63,  type:"mcq", level:"L2", topic:"Domain & Range",
+    question:"In interval notation, the domain of $f(x) = \\sqrt{10 - x}$ is:",
+    options:["$[10, +\\infty[$","$[0, 10]$","$]-\\infty, 10]$","$(-\\infty, 10)$"],
+    answer:"$]-\\infty, 10]$",
+    hint:"Need $10 - x \\geq 0 \\Rightarrow x \\leq 10$." },
+
+  { id:64,  type:"mcq", level:"L3", topic:"Linear Functions",
+    question:"The linear function $f(x) = 2x - 6$ intersects the x-axis at:",
+    options:["$(0, -6)$","$(6, 0)$","$(3, 0)$","$(0, 3)$"],
+    answer:"$(3, 0)$",
+    hint:"Set $f(x) = 0$: $2x - 6 = 0 \\Rightarrow x = 3$." },
+
+  { id:65,  type:"mcq", level:"L3", topic:"Linear Functions",
+    question:"The graph of $f(x) = -2$ is:",
+    options:["A line parallel to y-axis","A line parallel to x-axis","A curve","A vertical line"],
+    answer:"A line parallel to x-axis",
+    hint:"$f(x) = -2$ is a constant function — always horizontal." },
+
+  { id:66,  type:"mcq", level:"L3", topic:"Linear Functions",
+    question:"The y-intercept of $f(x) = 5 - x$ is:",
+    options:["$(5, 0)$","$(0, 5)$","$(-5, 0)$","$(0, -5)$"],
+    answer:"$(0, 5)$",
+    hint:"Substitute $x = 0$: $f(0) = 5 - 0 = 5$. y-intercept is $(0, 5)$." },
+
+  { id:67,  type:"mcq", level:"L3", topic:"Linear Functions",
+    question:"The slope of $f(x) = \\dfrac{2}{3}x - 2$ is:",
+    options:["$-2$","$\\dfrac{2}{3}$","$\\dfrac{3}{2}$","$-3$"],
+    answer:"$\\dfrac{2}{3}$",
+    hint:"In $f(x) = bx + c$, the slope is $b$, the coefficient of $x$." },
+
+  { id:68,  type:"mcq", level:"L3", topic:"Linear Functions",
+    question:"The x-intercept of $f(x) = 4 - x$ is:",
+    options:["$(0, 4)$","$(4, 0)$","$(-4, 0)$","$(0, -4)$"],
+    answer:"$(4, 0)$",
+    hint:"Set $f(x) = 0$: $4 - x = 0 \\Rightarrow x = 4$." },
+
+  { id:69,  type:"mcq", level:"L3", topic:"Linear Functions",
+    question:"The function $f(x) = \\begin{cases} 1 & x \\geq 0 \\\\ -2 & x < 0 \\end{cases}$ is a:",
+    options:["Linear function","Constant function","Piecewise function","Quadratic function"],
+    answer:"Piecewise function",
+    hint:"Different rules for different parts of the domain = piecewise." },
+
+  { id:70,  type:"mcq", level:"L4", topic:"Quadratic Functions",
+    question:"What is the vertex of $f(x) = (x - 3)^2 + 5$?",
+    options:["$(3, 5)$","$(-3, 5)$","$(3, -5)$","$(-3, -5)$"],
+    answer:"$(3, 5)$",
+    hint:"Vertex form: $f(x) = (x - h)^2 + k$ has vertex $(h, k)$." },
+
+  { id:71,  type:"mcq", level:"L4", topic:"Quadratic Functions",
+    question:"If the leading coefficient $a$ in $f(x) = ax^2 + bx + c$ is negative, the parabola opens:",
+    options:["Upward","Downward","To the right","To the left"],
+    answer:"Downward",
+    hint:"Negative $a \\Rightarrow$ opens down (like an arch). Positive $a \\Rightarrow$ opens up." },
+
+  { id:72,  type:"mcq", level:"L4", topic:"Quadratic Functions",
+    question:"What is the axis of symmetry of $f(x) = x^2 - 4x + 7$?",
+    options:["$x = -2$","$y = 2$","$x = 2$","$x = 4$"],
+    answer:"$x = 2$",
+    hint:"$x = -b/(2a) = -(-4)/(2 \\cdot 1) = 4/2 = 2$." },
+
+  { id:73,  type:"mcq", level:"L4", topic:"Quadratic Functions",
+    question:"What is the y-coordinate of the y-intercept of $f(x) = 2x^2 + 8x - 1$?",
+    options:["2","8","1","$-1$"],
+    answer:"$-1$",
+    hint:"Set $x = 0$: $f(0) = 2(0)^2 + 8(0) - 1 = -1$." },
+
+  { id:74,  type:"mcq", level:"L4", topic:"Quadratic Functions",
+    question:"The roots (zeros) of $f(x) = x^2 - 9$ are:",
+    options:["$3$ and $-3$","$9$ and $-9$","$0$ and $9$","Only $3$"],
+    answer:"$3$ and $-3$",
+    hint:"$x^2 - 9 = (x-3)(x+3) = 0 \\Rightarrow x = \\pm 3$." },
+
+  { id:75,  type:"mcq", level:"L4", topic:"Quadratic Functions",
+    question:"The vertical line through the vertex that divides the parabola into two matching halves is the:",
+    options:["X-axis","Y-axis","Axis of Symmetry","Tangent line"],
+    answer:"Axis of Symmetry",
+    hint:"The parabola is a mirror image on either side of this vertical line." },
+
+  { id:76,  type:"mcq", level:"L4", topic:"Quadratic Functions",
+    question:"If a parabola has vertex at $(0, 4)$ and opens downward, the peak is at:",
+    options:["$(0, 4)$","$(4, 0)$","$(0, -4)$","$(2, 2)$"],
+    answer:"$(0, 4)$",
+    hint:"For a downward parabola, the vertex IS the maximum (peak)." },
+
+  { id:77,  type:"mcq", level:"L5", topic:"Cubic Functions",
+    question:"The degree of a cubic function is:",
+    options:["1st","2nd","3rd","4th"],
+    answer:"3rd",
+    hint:"'Cubic' comes from the Latin for cube — $x^3$ is the highest term." },
+
+  { id:78,  type:"mcq", level:"L5", topic:"Cubic Functions",
+    question:"The graph of $f(x) = x^3$ passes through:",
+    options:["$(0, 1)$","$(1, 0)$","$(0, 0)$","$(-1, 1)$"],
+    answer:"$(0, 0)$",
+    hint:"$f(0) = 0^3 = 0$." },
+
+  { id:79,  type:"mcq", level:"L5", topic:"Cubic Functions",
+    question:"The symmetric point of $f(x) = (x + 3)^3$ is:",
+    options:["$(3, 0)$","$(-3, 0)$","$(0, 3)$","$(0, -3)$"],
+    answer:"$(-3, 0)$",
+    hint:"$(x - a)^3 + b$ has center $(a, b)$. Here $a = -3, b = 0$." },
+
+  { id:80,  type:"mcq", level:"L5", topic:"Cubic Functions",
+    question:"The symmetric point of $f(x) = (x - 1)^3$ is:",
+    options:["$(-1, 0)$","$(0, 1)$","$(1, 0)$","$(0, -1)$"],
+    answer:"$(1, 0)$",
+    hint:"$(x - 1)^3 + 0$ has center $(1, 0)$." },
+
+  { id:81,  type:"mcq", level:"L6", topic:"Rational Functions",
+    question:"The symmetric point of $f(x) = \\dfrac{1}{x-2} + 3$ is:",
+    options:["$(2, 3)$","$(3, 2)$","$(-2, 3)$","$(2, -3)$"],
+    answer:"$(2, 3)$",
+    hint:"Shift right by 2, up by 3. Center of $1/x$ is at origin, so new center is $(2, 3)$." },
+
+  { id:82,  type:"mcq", level:"L6", topic:"Rational Functions",
+    question:"The graph of $f(x) = -\\dfrac{1}{x}$ lies in:",
+    options:["1st \\& 3rd","2nd \\& 4th","1st \\& 2nd","3rd \\& 4th"],
+    answer:"2nd \\& 4th",
+    hint:"The negative flips $1/x$ to the 2nd and 4th quadrants." },
+
+  { id:83,  type:"mcq", level:"L6", topic:"Rational Functions",
+    question:"The vertical asymptote of $f(x) = \\dfrac{1}{x+5}$ is:",
+    options:["$x = 5$","$y = -5$","$x = -5$","$y = 5$"],
+    answer:"$x = -5$",
+    hint:"Vertical asymptote is where the denominator equals zero: $x + 5 = 0$." },
+
+  { id:84,  type:"mcq", level:"L6", topic:"Rational Functions",
+    question:"If $f(x) = \\dfrac{1}{x^2+1}$, then the domain is:",
+    options:["$\\mathbb{R} - \\{1\\}$","$\\mathbb{R} - \\{-1\\}$","$\\mathbb{R}$","$\\emptyset$"],
+    answer:"$\\mathbb{R}$",
+    hint:"$x^2 + 1 \\geq 1 > 0$ for all real $x$, so denominator is never zero." },
+
+  { id:85,  type:"mcq", level:"L7", topic:"Exponential Functions",
+    question:"Which function represents exponential decay?",
+    options:["$f(x) = 3^x$","$f(x) = (\\frac{1}{2})^x$","$f(x) = x^2$","$f(x) = 2x$"],
+    answer:"$f(x) = (\\frac{1}{2})^x$",
+    hint:"Decay requires $0 < a < 1$. Here $a = 1/2$." },
+
+  { id:86,  type:"mcq", level:"L7", topic:"Exponential Functions",
+    question:"The domain of $f(x) = 2^x$ is:",
+    options:["$x > 0$","$x < 0$","$\\mathbb{R}$","$x \\geq 0$"],
+    answer:"$\\mathbb{R}$",
+    hint:"You can raise 2 to any real power — no restrictions." },
+
+  { id:87,  type:"mcq", level:"L7", topic:"Exponential Functions",
+    question:"The range of $f(x) = 3^x$ is:",
+    options:["$\\mathbb{R}$","$y > 0$","$y < 0$","$y \\neq 0$"],
+    answer:"$y > 0$",
+    hint:"Exponential functions are always strictly positive." },
+
+  { id:88,  type:"mcq", level:"L7", topic:"Exponential Functions",
+    question:"The graph of $f(x) = a^x$ passes through:",
+    options:["$(1, 0)$","$(0, 1)$","$(1, 1)$","$(0, 0)$"],
+    answer:"$(0, 1)$",
+    hint:"$f(0) = a^0 = 1$ for any valid base $a$." },
+
+  { id:89,  type:"mcq", level:"L7", topic:"Exponential Functions",
+    question:"If $a > 1$, $f(x) = a^x$ is:",
+    options:["Constant","Decreasing","Increasing","Undefined"],
+    answer:"Increasing",
+    hint:"Larger base (> 1) means the function grows as $x$ increases." },
+
+  { id:90,  type:"mcq", level:"L7", topic:"Exponential Functions",
+    question:"Graph of $f(x) = 2^{x+3}$ is a shift:",
+    options:["3 down","3 up","3 left","3 right"],
+    answer:"3 left",
+    hint:"Replacing $x$ with $x + 3$ shifts the graph 3 units to the left." },
+
+  { id:91,  type:"mcq", level:"L7", topic:"Exponential Functions",
+    question:"Graph of $f(x) = 2^{x-4}$ is shifted:",
+    options:["4 left","4 right","4 up","4 down"],
+    answer:"4 right",
+    hint:"Replacing $x$ with $x - 4$ shifts the graph 4 units to the right." },
+
+  { id:92,  type:"mcq", level:"L7", topic:"Exponential Functions",
+    question:"Which of the following is an exponential function?",
+    options:["$f(x) = x^3$","$f(x) = 2^x$","$f(x) = 3x$","$f(x) = x^2 + 1$"],
+    answer:"$f(x) = 2^x$",
+    hint:"In an exponential function, the variable is the exponent (not the base)." },
+
+  { id:93,  type:"mcq", level:"L7", topic:"Exponential Functions",
+    question:"$F(x) = (-3)^x$ is exponential:",
+    options:["True","False","Sometimes","Depends on $x$"],
+    answer:"False",
+    hint:"The base must be positive. $-3$ is negative, so this is NOT a valid exponential function." },
+
+  { id:94,  type:"mcq", level:"L8", topic:"Limits",
+    question:"$\\lim_{x \\to 1} (2x + 3) = $",
+    options:["5","7","3","1"],
+    answer:"5",
+    hint:"Direct substitution: $2(1) + 3 = 5$." },
+
+  { id:95,  type:"mcq", level:"L8", topic:"Limits",
+    question:"$\\lim_{x \\to 3} \\dfrac{2x-1}{3x+1} = $",
+    options:["$\\dfrac{2}{3}$","$\\dfrac{1}{2}$","2","1"],
+    answer:"$\\dfrac{1}{2}$",
+    hint:"Direct substitution: $\\frac{2(3)-1}{3(3)+1} = \\frac{5}{10} = \\frac{1}{2}$." },
+
+  { id:96,  type:"mcq", level:"L8", topic:"Limits",
+    question:"$\\lim_{x \\to 1} (7) = $",
+    options:["7","1","$-7$","Undefined"],
+    answer:"7",
+    hint:"The limit of a constant is just that constant, regardless of where $x$ goes." },
+
+  { id:97,  type:"mcq", level:"L8", topic:"Limits",
+    question:"$\\lim_{x \\to 2} \\dfrac{x^5 - 2^5}{x - 2} = $",
+    options:["2","160","5","80"],
+    answer:"80",
+    hint:"Use the power rule: $\\lim_{x \\to a} \\frac{x^n - a^n}{x - a} = n \\cdot a^{n-1}$. Here: $5 \\cdot 2^4 = 80$." },
+
+  { id:98,  type:"mcq", level:"L8", topic:"Limits",
+    question:"$\\lim_{x \\to \\infty} \\dfrac{1}{x} = $",
+    options:["0","$\\infty$","$-\\infty$","Undefined"],
+    answer:"0",
+    hint:"As $x$ grows infinitely large, $1/x$ shrinks toward zero." },
+
+  { id:99,  type:"mcq", level:"L8", topic:"Limits",
+    question:"$\\lim_{x \\to \\infty} (x^3) = $",
+    options:["0","$\\infty$","$-\\infty$","Undefined"],
+    answer:"$\\infty$",
+    hint:"As $x \\to +\\infty$, $x^3$ also grows without bound." },
+
+  // ── GROUP 3: TRUE / FALSE ──────────────────────────────────────────────────
+  { id:100, type:"tf", level:"L1", topic:"Functions - Basic",
+    question:"If $f(x) = x^2$, then $f(-5)$ equals 25.",
+    answer:"True",
+    hint:"$f(-5) = (-5)^2 = 25$. Squaring removes the negative." },
+
+  { id:101, type:"tf", level:"L1", topic:"Functions - Basic",
+    question:"The following function is NOT a real function: $f(x) = \\pm x$.",
+    answer:"True",
+    hint:"$\\pm x$ gives two outputs for one input — that violates the function rule." },
+
+  { id:102, type:"tf", level:"L1", topic:"Functions - Basic",
+    question:"The co-domain is always equal to the range.",
+    answer:"False",
+    hint:"The range is a subset of the co-domain — they're equal only if every co-domain element is used." },
+
+  { id:103, type:"tf", level:"L1", topic:"Functions - Basic",
+    question:"The relation $R = \\{(1,3),(1,5),(2,4)\\}$ is a function.",
+    answer:"False",
+    hint:"$x = 1$ maps to both 3 and 5 — two outputs for one input." },
+
+  { id:104, type:"tf", level:"L1", topic:"Functions - Basic",
+    question:"The function $f(x) = \\dfrac{x-1}{x-1}$ has a domain of all real numbers.",
+    answer:"False",
+    hint:"Denominator is zero at $x = 1$, so $x = 1$ is excluded from the domain." },
+
+  { id:105, type:"tf", level:"L2", topic:"Domain & Range",
+    question:"The domain of a function is the set of all possible input values (x-values).",
+    answer:"True",
+    hint:"This is the definition of domain." },
+
+  { id:106, type:"tf", level:"L2", topic:"Domain & Range",
+    question:"The range of $f(x) = x^2$ includes negative numbers.",
+    answer:"False",
+    hint:"$x^2 \\geq 0$ always. The range is $[0, +\\infty[$." },
+
+  { id:107, type:"tf", level:"L2", topic:"Domain & Range",
+    question:"In $f(x) = \\dfrac{5}{x-2}$, the number 2 is excluded from the domain.",
+    answer:"True",
+    hint:"$x = 2$ makes the denominator zero — division by zero is undefined." },
+
+  { id:108, type:"tf", level:"L2", topic:"Domain & Range",
+    question:"The range is the set of all possible output values (y-values).",
+    answer:"True",
+    hint:"This is the definition of range." },
+
+  { id:109, type:"tf", level:"L2", topic:"Domain & Range",
+    question:"The domain of $f(x) = \\sqrt{x}$ is all real numbers.",
+    answer:"False",
+    hint:"You cannot take the square root of a negative number. Domain is $x \\geq 0$." },
+
+  { id:110, type:"tf", level:"L2", topic:"Domain & Range",
+    question:"If a graph has a solid circle at a point, that value is included in the domain or range.",
+    answer:"True",
+    hint:"Solid circle = closed endpoint (included). Open circle = excluded." },
+
+  { id:111, type:"tf", level:"L2", topic:"Domain & Range",
+    question:"For $f(x) = 7$, the range consists of only one number.",
+    answer:"True",
+    hint:"A constant function always outputs the same single value." },
+
+  { id:112, type:"tf", level:"L3", topic:"Linear Functions",
+    question:"A constant function is represented by a line parallel to the x-axis.",
+    answer:"True",
+    hint:"$f(x) = c$ is always horizontal — parallel to the x-axis." },
+
+  { id:113, type:"tf", level:"L3", topic:"Linear Functions",
+    question:"The graph of $f(x) = c$ cuts the y-axis at $(c, 0)$.",
+    answer:"False",
+    hint:"The y-intercept is $(0, c)$, not $(c, 0)$. It crosses the y-axis at height $c$." },
+
+  { id:114, type:"tf", level:"L3", topic:"Linear Functions",
+    question:"A linear function has the form $f(x) = bx + c$ where $b \\neq 0$.",
+    answer:"True",
+    hint:"$b \\neq 0$ ensures it's truly linear (degree 1). If $b = 0$, it's constant." },
+
+  { id:115, type:"tf", level:"L3", topic:"Linear Functions",
+    question:"The graph of a linear function is a straight line.",
+    answer:"True",
+    hint:"'Linear' literally means 'of a line'." },
+
+  { id:116, type:"tf", level:"L3", topic:"Linear Functions",
+    question:"A function with more than one rule is called a piecewise function.",
+    answer:"True",
+    hint:"Piecewise functions have different rules for different parts of the domain." },
+
+  { id:117, type:"tf", level:"L3", topic:"Linear Functions",
+    question:"The graph of $f(x) = 3$ passes through the point $(0, 3)$.",
+    answer:"True",
+    hint:"$f(0) = 3$. The y-intercept of a constant function $f(x) = c$ is always $(0, c)$." },
+
+  { id:118, type:"tf", level:"L3", topic:"Linear Functions",
+    question:"The function $f(x) = 4 - x$ has slope equal to 1.",
+    answer:"False",
+    hint:"Rewrite as $f(x) = -x + 4$. The slope is $-1$, not $+1$." },
+
+  { id:119, type:"tf", level:"L5", topic:"Cubic Functions",
+    question:"The symmetric point of $f(x) = (x-1)^3$ is the point $(1, 0)$.",
+    answer:"True",
+    hint:"$(x-1)^3 + 0$ → center is $(1, 0)$." },
+
+  { id:120, type:"tf", level:"L5", topic:"Cubic Functions",
+    question:"The symmetric point of $f(x) = (x+3)^3$ is the point $(-3, 0)$.",
+    answer:"True",
+    hint:"$(x - (-3))^3 + 0$ → center is $(-3, 0)$." },
+
+  { id:121, type:"tf", level:"L5", topic:"Cubic Functions",
+    question:"The symmetric point of $f(x) = (x+1)^3 - 2$ is $(-1, -2)$.",
+    answer:"True",
+    hint:"Center of $(x-a)^3 + b$ is $(a, b)$. Here $a = -1, b = -2$." },
+
+  { id:122, type:"tf", level:"L6", topic:"Rational Functions",
+    question:"The graph of $\\dfrac{1}{x}$ is symmetric about the origin.",
+    answer:"True",
+    hint:"$f(-x) = \\frac{1}{-x} = -f(x)$ → odd function → symmetric about origin." },
+
+  { id:123, type:"tf", level:"L6", topic:"Rational Functions",
+    question:"The graph of $\\dfrac{1}{x-3}$ has horizontal asymptote $y = 3$.",
+    answer:"False",
+    hint:"Vertical asymptote is $x = 3$. Horizontal asymptote is $y = 0$." },
+
+  { id:124, type:"tf", level:"L6", topic:"Rational Functions",
+    question:"The domain of $f(x) = \\dfrac{1}{x^2-9}$ is $\\mathbb{R} - \\{3, -3\\}$.",
+    answer:"True",
+    hint:"$x^2 - 9 = (x-3)(x+3) = 0$ at $x = \\pm 3$. Both excluded." },
+
+  { id:125, type:"tf", level:"L7", topic:"Exponential Functions",
+    question:"If $a > 1$, the graph of $a^x$ is increasing.",
+    answer:"True",
+    hint:"Larger base > 1 means exponential growth (increasing)." },
+
+  { id:126, type:"tf", level:"L7", topic:"Exponential Functions",
+    question:"If $0 < a < 1$, the graph of $a^x$ is decreasing.",
+    answer:"True",
+    hint:"Fractional base means exponential decay (decreasing)." },
+
+  { id:127, type:"tf", level:"L7", topic:"Exponential Functions",
+    question:"$f(x) = x^5$ is an exponential function.",
+    answer:"False",
+    hint:"In $x^5$, the variable is the base. Exponential means variable is the exponent: $5^x$." },
+
+  { id:128, type:"tf", level:"L7", topic:"Exponential Functions",
+    question:"Domain of $a^x$ is all real numbers.",
+    answer:"True",
+    hint:"There are no restrictions on the exponent for a valid exponential function." },
+
+  { id:129, type:"tf", level:"L7", topic:"Exponential Functions",
+    question:"Range of $a^x$ includes zero.",
+    answer:"False",
+    hint:"$a^x > 0$ always. The range is $(0, +\\infty)$ — it approaches but never reaches zero." },
+
+  { id:130, type:"tf", level:"L7", topic:"Exponential Functions",
+    question:"$f(x) = 2^{x+3}$ passes through the point $(-3, 1)$.",
+    answer:"True",
+    hint:"$f(-3) = 2^{-3+3} = 2^0 = 1$. ✓" },
+
+  { id:131, type:"tf", level:"L7", topic:"Exponential Functions",
+    question:"$F(x) = 3^x$ is exponential.",
+    answer:"True",
+    hint:"Base $a = 3 > 0$ and $a \\neq 1$. Satisfies all conditions." },
+
+  // ── GROUP 4: ESSAY (Problem Solving) ────────────────────────────────────
+  { id:132, type:"essay", level:"L1", topic:"Functions - Basic",
+    question:"If $f(x) = 3x - 4$, find $f(2)$.",
+    answer:"$f(2) = 3(2) - 4 = 6 - 4 = 2$",
+    hint:"Substitute $x = 2$ directly into the formula." },
+
+  { id:133, type:"essay", level:"L1", topic:"Functions - Basic",
+    question:"If $f(x) = 2x + 4$, find $f(-3)$.",
+    answer:"$f(-3) = 2(-3) + 4 = -6 + 4 = -2$",
+    hint:"Substitute $x = -3$. Remember: $2 \\times (-3) = -6$." },
+
+  { id:134, type:"essay", level:"L1", topic:"Functions - Basic",
+    question:"If $f(x) = 2x - 3$ and $g(x) = x^2 - 1$, find: a) $f(2)$, b) $g(-1)$, c) $f(\\frac{1}{2})$, d) If $f(m) = 7$, find $m$.",
+    answer:"a) $f(2) = 1$  |  b) $g(-1) = 0$  |  c) $f(\\frac{1}{2}) = -2$  |  d) $m = 5$",
+    hint:"For part d): set $2m - 3 = 7$, then solve for $m$." },
+
+  { id:135, type:"essay", level:"L2", topic:"Domain & Range",
+    question:"If $X=\\{1,2,4\\}$, $Y=\\{3,5,7,9\\}$ and $b = 2a+1$. Write $F$, is it a function? Domain? Range?",
+    answer:"$F = \\{(1,3),(2,5),(4,9)\\}$ | Yes, each element in $X$ has only one image | Domain $= \\{1,2,4\\}$ | Range $= \\{3,5,9\\}$",
+    hint:"Apply $b = 2a + 1$ to each $a \\in X$. Check if each input has exactly one output." },
+
+  { id:136, type:"essay", level:"L2", topic:"Domain & Range",
+    question:"Determine the domain of $f(x) = 4x^3 - 5x + 2$.",
+    answer:"Polynomial function $\\Rightarrow$ Domain $= \\mathbb{R}$",
+    hint:"Polynomials are defined for all real numbers — no restrictions." },
+
+  { id:137, type:"essay", level:"L2", topic:"Domain & Range",
+    question:"Determine the domain of $f(x) = \\sqrt{x - 1}$.",
+    answer:"$x - 1 \\geq 0 \\Rightarrow x \\geq 1 \\Rightarrow$ Domain $= [1, +\\infty[$",
+    hint:"Set the radicand $\\geq 0$ and solve." },
+
+  { id:138, type:"essay", level:"L2", topic:"Domain & Range",
+    question:"Determine the domain of $f(x) = \\dfrac{1}{x^2 - 4}$.",
+    answer:"$x^2 - 4 = 0 \\Rightarrow x = 2$ or $x = -2 \\Rightarrow$ Domain $= \\mathbb{R} - \\{2, -2\\}$",
+    hint:"Factor: $x^2 - 4 = (x-2)(x+2)$. Exclude both roots." },
+
+  { id:139, type:"essay", level:"L3", topic:"Linear Functions",
+    question:"Graph $f(x) = 5 - x$. Find x-intercept, y-intercept, and draw table of values.",
+    answer:"x-intercept: $(5,0)$ | y-intercept: $(0,5)$ | Table: $x=2 \\to 3,\\; x=3 \\to 2,\\; x=4 \\to 1$",
+    hint:"x-intercept: set $f(x) = 0$. y-intercept: set $x = 0$." },
+
+  { id:140, type:"essay", level:"L3", topic:"Linear Functions",
+    question:"Graph $f(x) = 2x - 4$. Find x-intercept and y-intercept.",
+    answer:"x-intercept: $(2,0)$ | y-intercept: $(0,-4)$",
+    hint:"x-intercept: $2x - 4 = 0 \\Rightarrow x = 2$. y-intercept: $f(0) = -4$." },
+
+  { id:141, type:"essay", level:"L4", topic:"Quadratic Functions",
+    question:"Graph $f(x) = x^2 + 2x + 1$, $x \\in [-4, 2]$. Find the vertex.",
+    answer:"Vertex: $(-1, 0)$ | Axis: $x = -1$ | Table: $(-4,9),(-3,4),(-2,1),(-1,0),(0,1),(1,4),(2,9)$",
+    hint:"$f(x) = (x+1)^2$. Vertex is at $x = -b/(2a) = -2/2 = -1$." },
+
+  { id:142, type:"essay", level:"L4", topic:"Quadratic Functions",
+    question:"For $f(x) = 2x^2 + 8x + 10$, find: 1) vertex, 2) axis of symmetry, 3) min or max.",
+    answer:"1) $x = -b/2a = -8/4 = -2 \\Rightarrow f(-2) = 8-16+10 = 2 \\Rightarrow$ Vertex: $(-2, 2)$  |  2) $x = -2$  |  3) Minimum ($a=2>0$)",
+    hint:"$a = 2 > 0$ so it opens upward → minimum. Use $x_v = -b/(2a)$." },
+
+  { id:143, type:"essay", level:"L4", topic:"Quadratic Functions",
+    question:"For $f(x) = (x - 3)^2 + 1$, find: 1) vertex, 2) axis of symmetry, 3) min or max.",
+    answer:"1) Vertex: $(3, 1)$  |  2) $x = 3$  |  3) Minimum (opens upward)",
+    hint:"Vertex form $(x - h)^2 + k$ directly gives vertex $(h, k)$." },
+
+  { id:144, type:"essay", level:"L5", topic:"Cubic Functions",
+    question:"Graph $f(x) = x^3$, $x \\in [-2, 2]$. Complete the table and identify the symmetric point.",
+    answer:"Table: $(-2,-8),(-1,-1),(0,0),(1,1),(2,8)$ | Symmetric point: $(0, 0)$",
+    hint:"Evaluate $f(x)$ at each integer in $[-2, 2]$. The center is always the inflection point." },
+
+  { id:145, type:"essay", level:"L5", topic:"Cubic Functions",
+    question:"Graph $f(x) = (x - 2)^2$, $x \\in [-1, 5]$. Find the vertex.",
+    answer:"Expand: $x^2-4x+4$ | Vertex: $(2, 0)$ | Table: $(-1,9),(0,4),(1,1),(2,0),(3,1),(4,4),(5,9)$",
+    hint:"Vertex form $(x-h)^2 + k$ gives vertex $(h, k) = (2, 0)$." },
+
+  { id:146, type:"essay", level:"L6", topic:"Rational Functions",
+    question:"For $f(x) = \\dfrac{-1}{x-1} + 2$, find: a and b values, symmetric point, vertical asymptote, horizontal asymptote.",
+    answer:"$a = 1,\\; b = 2$ | Symmetric point: $(1, 2)$ | Vertical asymptote: $x = 1$ | Horizontal asymptote: $y = 2$",
+    hint:"Form $\\frac{1}{x-a}+b$: vertical asymptote is $x = a$, horizontal is $y = b$." },
+
+  { id:147, type:"essay", level:"L7", topic:"Exponential Functions",
+    question:"Describe the domain and range of $f(x) = 3^x$.",
+    answer:"Domain: $\\mathbb{R}$ (all real numbers) | Range: $y > 0\\;\\;(]0, +\\infty[)$",
+    hint:"All exponential functions have domain $\\mathbb{R}$ and range $(0, +\\infty)$." },
+
+  { id:148, type:"essay", level:"L7", topic:"Exponential Functions",
+    question:"Given $y = 2^x$, draw the function $y = 2^x + 1$.",
+    answer:"The graph of $y = 2^x + 1$ is $y = 2^x$ shifted 1 unit upward. Passes through $(0, 2)$ instead of $(0, 1)$.",
+    hint:"Adding a constant outside shifts the graph vertically." },
+
+  { id:149, type:"essay", level:"L8", topic:"Limits",
+    question:"Evaluate: $\\lim_{x \\to -2} \\dfrac{x^3 + 2x^2 - 1}{5 - 3x}$",
+    answer:"Direct substitution: $\\dfrac{-8 + 8 - 1}{5 + 6} = \\dfrac{-1}{11}$",
+    hint:"If direct substitution gives $0/0$, factor and simplify. Otherwise plug in directly." },
+
+  { id:150, type:"essay", level:"L8", topic:"Limits",
+    question:"Evaluate: $\\lim_{x \\to 3} (\\sqrt{x+1} + 2)$",
+    answer:"Direct substitution: $\\sqrt{4} + 2 = 2 + 2 = 4$",
+    hint:"Substitute $x = 3$: $\\sqrt{3 + 1} = \\sqrt{4} = 2$." },
+
+  { id:151, type:"essay", level:"L8", topic:"Limits",
+    question:"Find: $\\lim_{x \\to 2} \\dfrac{x^7 - 128}{x^3 - 8}$",
+    answer:"Using power rule: $\\dfrac{7 \\cdot 2^6}{3 \\cdot 2^2} = \\dfrac{448}{12} = \\dfrac{112}{3}$",
+    hint:"Use $\\lim_{x \\to a} \\frac{x^n - a^n}{x^m - a^m} = \\frac{n \\cdot a^{n-1}}{m \\cdot a^{m-1}}$." },
+
+  { id:152, type:"essay", level:"L8", topic:"Limits",
+    question:"Find: $\\lim_{x \\to 2} \\dfrac{x^2 + 3x - 10}{x^2 - 4}$",
+    answer:"Factor: $\\dfrac{(x+5)(x-2)}{(x+2)(x-2)} = \\dfrac{x+5}{x+2} \\to \\dfrac{7}{4}$",
+    hint:"Both numerator and denominator are zero at $x=2$. Factor and cancel $(x-2)$." },
+
+  { id:153, type:"essay", level:"L8", topic:"Limits",
+    question:"Evaluate: $\\lim_{x \\to \\infty} \\left(\\dfrac{1}{x} + 3\\right)$",
+    answer:"As $x \\to \\infty$, $\\dfrac{1}{x} \\to 0 \\Rightarrow$ limit $= 3$",
+    hint:"$1/x \\to 0$ as $x \\to \\infty$." },
+
+  { id:154, type:"essay", level:"L8", topic:"Limits",
+    question:"Evaluate: $\\lim_{x \\to \\infty} \\left(4 - \\dfrac{3}{x^2}\\right)$",
+    answer:"As $x \\to \\infty$, $\\dfrac{3}{x^2} \\to 0 \\Rightarrow$ limit $= 4$",
+    hint:"Any constant over $x^n$ (with $n > 0$) goes to zero as $x \\to \\infty$." },
+
+  { id:155, type:"essay", level:"L8", topic:"Limits",
+    question:"Discuss the continuity of $f(x) = \\begin{cases} x^3-3 & x \\leq 2 \\\\ x^2+1 & x > 2 \\end{cases}$ at $x = 2$.",
+    answer:"$f(2) = 8-3 = 5$ | $\\lim^+ = 4+1 = 5$ | $\\lim^- = 8-3 = 5$ | Since $f(2) = \\lim = 5$, function IS continuous at $x = 2$",
+    hint:"For continuity: $f(a)$ must exist, the limit must exist, and they must be equal." },
+
+  // ── GROUP 5: MATCH ───────────────────────────────────────────────────────
+  { id:156, type:"match", level:"L2", topic:"Domain & Range",
+    question:"Match: $f(x) = \\dfrac{1}{x-3}$",
+    answer:"Domain: $x \\neq 3$" },
+
+  { id:157, type:"match", level:"L2", topic:"Domain & Range",
+    question:"Match: $f(x) = \\sqrt{x+2}$",
+    answer:"Domain: $]-2, +\\infty[$",
+    hint:"Need $x + 2 \\geq 0$." },
+
+  { id:158, type:"match", level:"L2", topic:"Domain & Range",
+    question:"Match: $f(x) = x^2 + 5$",
+    answer:"Range: $[5, +\\infty[$",
+    hint:"Minimum value is 5 (at $x = 0$)." },
+
+  { id:159, type:"match", level:"L2", topic:"Domain & Range",
+    question:"Match: $f(x) = x^2$",
+    answer:"Range: $[0, +\\infty[$",
+    hint:"Squares are never negative." },
+
+  { id:160, type:"match", level:"L2", topic:"Domain & Range",
+    question:"Match: $f(x) = 2x - 1$",
+    answer:"Domain: $]-\\infty, +\\infty[$" },
+
+  { id:161, type:"match", level:"L3", topic:"Linear Functions",
+    question:"Match: $f(x) = 3$",
+    answer:"Parallel to x-axis" },
+
+  { id:162, type:"match", level:"L3", topic:"Linear Functions",
+    question:"Match: $f(x) = 4 - x$",
+    answer:"Slope $= -1$",
+    hint:"Rewrite: $f(x) = -x + 4$. Slope is $-1$." },
+
+  { id:163, type:"match", level:"L3", topic:"Linear Functions",
+    question:"Match: $f(x) = \\dfrac{2}{3}x - 2$",
+    answer:"Slope $= \\dfrac{2}{3}$" },
+
+  { id:164, type:"match", level:"L3", topic:"Linear Functions",
+    question:"Match: $f(x) = -5$",
+    answer:"Passes through $(0, -5)$" },
+
+  { id:165, type:"match", level:"L7", topic:"Exponential Functions",
+    question:"Match: $a^x$",
+    answer:"Growth (general form)" },
+
+  { id:166, type:"match", level:"L7", topic:"Exponential Functions",
+    question:"Match: $3^{x+2}$",
+    answer:"Shift left by 2 (on exponent)",
+    hint:"$x + c$ in the exponent = shift left by $c$." },
+
+  { id:167, type:"match", level:"L7", topic:"Exponential Functions",
+    question:"Match: $2^{x-3}$",
+    answer:"Shift right by 3",
+    hint:"$x - c$ in the exponent = shift right by $c$." },
+
+  { id:168, type:"match", level:"L7", topic:"Exponential Functions",
+    question:"Match: $(\\dfrac{1}{2})^x$",
+    answer:"Decay",
+    hint:"Base $0 < a < 1$ → exponential decay." },
+
+  { id:169, type:"match", level:"L7", topic:"Exponential Functions",
+    question:"Match: $7^x$",
+    answer:"Positive y-intercept",
+    hint:"$f(0) = 7^0 = 1 > 0$." },
+];
+
+/* ══════════════════════════════════════════════════════════════════════════════
+   CONFIG — Labels, colors, timer settings
+   ══════════════════════════════════════════════════════════════════════════════ */
+const TOPICS  = ["All Topics",  ...Array.from(new Set(questionBank.map(q => q.topic)))];
+const TYPES   = ["All Types",   "complete", "mcq", "tf", "essay", "match"];
+const LEVELS  = ["All Levels",  "L1","L2","L3","L4","L5","L6","L7","L8"];
+
+const TYPE_LABELS = { complete:"Fill in Blank", mcq:"Multiple Choice", tf:"True / False", essay:"Problem Solving", match:"Match" };
+const TYPE_COLORS = { complete:"#4f8ef7", mcq:"#a855f7", tf:"#22c55e", essay:"#f59e0b", match:"#f43f5e" };
+const PILL_COLORS = { complete:"#4f8ef7", mcq:"#a855f7", tf:"#22c55e", essay:"#f59e0b", match:"#f43f5e" };
+
+// ③ Timer configuration: total seconds for the whole quiz
+const QUIZ_TOTAL_SECONDS = 60; // seconds per question (total = questions × this)
+
+/* ══════════════════════════════════════════════════════════════════════════════
+   STATE
+   ══════════════════════════════════════════════════════════════════════════════ */
+let filter = { topic:"All Topics", type:"All Types", level:"All Levels", search:"" };
+let revealed  = {};   // { id: true/false }
+let hintShown = {};   // { id: true/false } — card hint toggle state
+
+// Quiz state
+let quizState = {
+  active:false, idx:0, score:0,
+  answered:false, chosen:null, finished:false,
+  questions:[], hintShownInQuiz:false,
+  timeLeft:0, timerInterval:null,
+  startTime:null, totalSeconds:0
+};
+
+/* ══════════════════════════════════════════════════════════════════════════════
+   ③ LOCALSTORAGE — Progress tracking helpers
+   ══════════════════════════════════════════════════════════════════════════════ */
+const LS_KEY = 'mathQB_stats';
+
+/** Load stats object from localStorage (or return defaults) */
+function loadStats() {
+  try {
+    return JSON.parse(localStorage.getItem(LS_KEY)) || { bestScore:null, bestPct:null, quizCount:0, totalCorrect:0, totalAnswered:0 };
+  } catch { return { bestScore:null, bestPct:null, quizCount:0, totalCorrect:0, totalAnswered:0 }; }
+}
+
+/** Save stats object to localStorage */
+function saveStats(stats) {
+  localStorage.setItem(LS_KEY, JSON.stringify(stats));
+}
+
+/** Update stats after a quiz is completed */
+function recordQuizResult(score, total) {
+  const stats = loadStats();
+  const pct   = total > 0 ? Math.round((score / total) * 100) : 0;
+
+  stats.quizCount++;
+  stats.totalCorrect  += score;
+  stats.totalAnswered += total;
+
+  // Update best score
+  if (stats.bestPct === null || pct > stats.bestPct) {
+    stats.bestScore = score;
+    stats.bestPct   = pct;
+    stats.bestTotal = total;
+  }
+
+  saveStats(stats);
+  renderStatsRow();
+  updateGlobalProgressBar(stats);
+}
+
+/** Render the stats row in the header */
+function renderStatsRow() {
+  const stats = loadStats();
+
+  const bestVal  = document.getElementById('bestScoreVal');
+  const countVal = document.getElementById('quizCountVal');
+  const avgVal   = document.getElementById('avgScoreVal');
+
+  if (stats.bestPct !== null) {
+    bestVal.textContent  = `${stats.bestScore}/${stats.bestTotal} (${stats.bestPct}%)`;
+  } else {
+    bestVal.textContent  = '—';
+  }
+
+  countVal.textContent = stats.quizCount;
+
+  if (stats.quizCount > 0 && stats.totalAnswered > 0) {
+    const avg = Math.round((stats.totalCorrect / stats.totalAnswered) * 100);
+    avgVal.textContent = `${avg}%`;
+  } else {
+    avgVal.textContent = '—';
+  }
+
+  updateGlobalProgressBar(stats);
+}
+
+/** Update the thin top progress bar based on best score percentage */
+function updateGlobalProgressBar(stats) {
+  const fill = document.getElementById('globalProgressFill');
+  fill.style.width = (stats.bestPct !== null ? stats.bestPct : 0) + '%';
+}
+
+/* ══════════════════════════════════════════════════════════════════════════════
+   ① KaTeX — Auto-render math in a specific container
+   ══════════════════════════════════════════════════════════════════════════════ */
+/**
+ * Renders all LaTeX math notation inside `el`.
+ * Called after injecting new HTML to ensure math is typeset.
+ * Supports: $...$ for inline, $$...$$ for display math.
+ */
+function renderMath(el) {
+  if (!el) return;
+  if (window._katexReady && window.renderMathInElement) {
+    window.renderMathInElement(el, {
+      delimiters: [
+        { left: '$$', right: '$$', display: true  },
+        { left: '$',  right: '$',  display: false },
+      ],
+      throwOnError: false,
+      output: 'html'
+    });
+  } else {
+    // KaTeX not yet loaded — queue a retry
+    window._katexReadyCb = () => renderMath(el);
+  }
+}
+
+/* ══════════════════════════════════════════════════════════════════════════════
+   HELPERS
+   ══════════════════════════════════════════════════════════════════════════════ */
+function getFiltered() {
+  return questionBank.filter(q => {
+    if (filter.topic  !== "All Topics"  && q.topic  !== filter.topic)  return false;
+    if (filter.type   !== "All Types"   && q.type   !== filter.type)   return false;
+    if (filter.level  !== "All Levels"  && q.level  !== filter.level)  return false;
+    if (filter.search && !q.question.toLowerCase().includes(filter.search.toLowerCase())) return false;
+    return true;
+  });
+}
+
+/* ══════════════════════════════════════════════════════════════════════════════
+   INIT SELECTS
+   ══════════════════════════════════════════════════════════════════════════════ */
+function initSelects() {
+  const topicSel = document.getElementById('topicFilter');
+  const typeSel  = document.getElementById('typeFilter');
+  const levelSel = document.getElementById('levelFilter');
+
+  TOPICS.forEach(t => { const o = document.createElement('option'); o.value = t; o.textContent = t;                 topicSel.appendChild(o); });
+  TYPES.forEach(t  => { const o = document.createElement('option'); o.value = t; o.textContent = TYPE_LABELS[t]||t; typeSel.appendChild(o); });
+  LEVELS.forEach(t => { const o = document.createElement('option'); o.value = t; o.textContent = t;                 levelSel.appendChild(o); });
+
+  topicSel.addEventListener('change', e => { filter.topic  = e.target.value; renderGrid(); });
+  typeSel.addEventListener('change',  e => { filter.type   = e.target.value; renderGrid(); });
+  levelSel.addEventListener('change', e => { filter.level  = e.target.value; renderGrid(); });
+  document.getElementById('searchInput').addEventListener('input', e => { filter.search = e.target.value; renderGrid(); });
+  document.getElementById('quizBtn').addEventListener('click', startQuiz);
+
+  // ⑤ Print button
+  document.getElementById('printBtn').addEventListener('click', () => {
+    // Update print subtitle with current filter info
+    const filtered = getFiltered();
+    document.getElementById('printSubtitle').textContent =
+      `${filtered.length} Questions · Topic: ${filter.topic} · Type: ${filter.type} · Level: ${filter.level} · Generated ${new Date().toLocaleDateString()}`;
+    window.print();
+  });
+
+  // Reset stats button
+  document.getElementById('resetStatsBtn').addEventListener('click', () => {
+    if (confirm('Reset all quiz statistics? This cannot be undone.')) {
+      localStorage.removeItem(LS_KEY);
+      renderStatsRow();
+    }
+  });
+}
+
+/* ══════════════════════════════════════════════════════════════════════════════
+   INIT HEADER
+   ══════════════════════════════════════════════════════════════════════════════ */
+function initHeader() {
+  document.getElementById('headerDesc').textContent =
+    `Question Bank — ${questionBank.length} Questions · Grades 1 Secondary`;
+
+  const pills = document.getElementById('headerPills');
+  ['complete','mcq','tf','essay','match'].forEach(t => {
+    const count = questionBank.filter(q => q.type === t).length;
+    const span  = document.createElement('span');
+    span.className = 'pill';
+    span.textContent = `${count} ${TYPE_LABELS[t]}`;
+    span.style.cssText = `background:${PILL_COLORS[t]}22;border:1px solid ${PILL_COLORS[t]}55;color:${PILL_COLORS[t]}`;
+    pills.appendChild(span);
+  });
+}
+
+/* ══════════════════════════════════════════════════════════════════════════════
+   RENDER GRID
+   ══════════════════════════════════════════════════════════════════════════════ */
+function renderGrid() {
+  const filtered = getFiltered();
+  const grid     = document.getElementById('grid');
+  document.getElementById('filteredCount').textContent = filtered.length;
+  document.getElementById('countLabel').textContent    = `${filtered.length} of ${questionBank.length} questions`;
+
+  grid.innerHTML = '';
+
+  if (filtered.length === 0) {
+    grid.innerHTML = `<div class="empty"><div class="empty-icon">📭</div><div class="empty-text">No questions match your filters.</div></div>`;
+    return;
+  }
+
+  filtered.forEach(q => {
+    const color      = TYPE_COLORS[q.type];
+    const isRevealed = !!revealed[q.id];
+    const isHintOn   = !!hintShown[q.id];
+
+    const card = document.createElement('div');
+    card.className = 'card';
+    card.style.border = `1px solid ${color}44`;
+
+    // Options HTML (MCQ)
+    let optionsHTML = '';
+    if (q.type === 'mcq' && q.options) {
+      optionsHTML = `<div class="options-list">
+        ${q.options.map((opt, i) => `<div class="option-item"><span class="option-letter">${String.fromCharCode(65+i)}.</span>${opt}</div>`).join('')}
+      </div>`;
+    }
+
+    // Answer HTML
+    const answerHTML = isRevealed ? `<div class="answer-box">✅ ${q.answer}</div>` : '';
+
+    // ② Hint button + card HTML
+    const hintHTML = q.hint ? `
+      <button class="hint-btn" data-id="${q.id}">
+        💡 ${isHintOn ? 'Hide Hint' : 'Need a Hint?'}
+      </button>
+      ${isHintOn ? `<div class="hint-card"><span class="hint-card-label">💡 Hint</span>${q.hint}</div>` : ''}
+    ` : '';
+
+    card.innerHTML = `
+      <div class="card-top">
+        <div class="card-badges">
+          <span class="badge" style="background:${color}33;color:${color};border:1px solid ${color}55">${TYPE_LABELS[q.type]}</span>
+          <span class="badge badge-level">${q.level}</span>
+        </div>
+        <span class="card-id">#${q.id}</span>
+      </div>
+      <div class="card-topic">${q.topic}</div>
+      <div class="card-question">${q.question}</div>
+      ${optionsHTML}
+      ${hintHTML}
+      <button class="btn-reveal ${isRevealed ? 'shown' : 'hidden'}" data-id="${q.id}">
+        ${isRevealed ? '▲ Hide Answer' : '▼ Show Answer'}
+      </button>
+      ${answerHTML}
+    `;
+
+    // Reveal answer button
+    card.querySelector('.btn-reveal').addEventListener('click', e => {
+      e.stopPropagation();
+      revealed[q.id] = !revealed[q.id];
+      renderGrid();
+    });
+
+    // ② Hint button toggle
+    const hintBtn = card.querySelector('.hint-btn');
+    if (hintBtn) {
+      hintBtn.addEventListener('click', e => {
+        e.stopPropagation();
+        hintShown[q.id] = !hintShown[q.id];
+        renderGrid();
+      });
+    }
+
+    grid.appendChild(card);
+  });
+
+  // ① Render KaTeX math in the entire grid after DOM update
+  renderMath(grid);
+}
+
+/* ══════════════════════════════════════════════════════════════════════════════
+   ③ QUIZ TIMER
+   ══════════════════════════════════════════════════════════════════════════════ */
+/** Start the countdown timer for the current quiz */
+function startTimer() {
+  clearInterval(quizState.timerInterval);
+  const timerEl = document.getElementById('quizTimerDisplay');
+  if (!timerEl) return;
+
+  quizState.timerInterval = setInterval(() => {
+    quizState.timeLeft--;
+    updateTimerDisplay();
+
+    if (quizState.timeLeft <= 0) {
+      clearInterval(quizState.timerInterval);
+      // Time's up — auto-finish the quiz
+      quizState.finished = true;
+      renderQuiz();
+    }
+  }, 1000);
+}
+
+/** Update the timer element's text and warn styling */
+function updateTimerDisplay() {
+  const timerEl = document.getElementById('quizTimerDisplay');
+  if (!timerEl) return;
+
+  const m = Math.floor(quizState.timeLeft / 60);
+  const s = quizState.timeLeft % 60;
+  timerEl.textContent = `⏱ ${m}:${s.toString().padStart(2,'0')}`;
+
+  // Warning pulse when < 30 seconds remain
+  if (quizState.timeLeft <= 30) timerEl.classList.add('warn');
+  else timerEl.classList.remove('warn');
+}
+
+/** Stop and clear the timer interval */
+function stopTimer() {
+  clearInterval(quizState.timerInterval);
+  quizState.timerInterval = null;
+}
+
+/* ══════════════════════════════════════════════════════════════════════════════
+   QUIZ — Start
+   ══════════════════════════════════════════════════════════════════════════════ */
+function startQuiz() {
+  const filtered = getFiltered();
+  if (filtered.length === 0) return;
+
+  // Calculate total time based on question count
+  const totalSecs = filtered.length * QUIZ_TOTAL_SECONDS;
+
+  quizState = {
+    active:true, idx:0, score:0,
+    answered:false, chosen:null, finished:false,
+    questions:[...filtered],
+    hintShownInQuiz:false,
+    timeLeft:totalSecs,
+    totalSeconds:totalSecs,
+    startTime:Date.now(),
+    timerInterval:null
+  };
+
+  renderQuiz();
+}
+
+/* ══════════════════════════════════════════════════════════════════════════════
+   QUIZ — Render Main Frame
+   ══════════════════════════════════════════════════════════════════════════════ */
+function renderQuiz() {
+  const modal = document.getElementById('quizModal');
+  const box   = document.getElementById('quizBox');
+  modal.style.display = 'flex';
+
+  // ── FINISH SCREEN ──
+  if (quizState.finished) {
+    stopTimer();
+
+    const total = quizState.questions.length;
+    const pct   = Math.round((quizState.score / total) * 100);
+    const timeTaken = Math.round((Date.now() - quizState.startTime) / 1000);
+    const msg   = quizState.score >= total*0.8 ? 'Excellent! 🌟' :
+                  quizState.score >= total*0.6 ? 'Good Work! 👍' : 'Keep Practicing 📚';
+
+    // ③ Save to localStorage
+    recordQuizResult(quizState.score, total);
+
+    box.innerHTML = `
+      <div class="finish">
+        <div class="finish-icon">🎓</div>
+        <h2>Quiz Complete!</h2>
+        <div class="finish-score">${quizState.score} / ${total}</div>
+        <div class="finish-pct">${pct}% — ${msg}</div>
+        <div class="finish-detail">
+          <div>✅ Correct: <span>${quizState.score}</span></div>
+          <div>❌ Wrong: <span>${total - quizState.score}</span></div>
+          <div>⏱ Time: <span>${Math.floor(timeTaken/60)}m ${timeTaken%60}s</span></div>
+          <div>📊 Score: <span>${pct}%</span></div>
+        </div>
+        <button class="btn-primary btn-retry" id="btnRetry">🔄 Try Again</button>
+        <button class="btn-primary btn-back"  id="btnBack">← Back to Question Bank</button>
+      </div>`;
+
+    document.getElementById('btnRetry').addEventListener('click', startQuiz);
+    document.getElementById('btnBack').addEventListener('click',  () => { modal.style.display = 'none'; });
+    return;
+  }
+
+  // ── QUESTION SCREEN ──
+  const q     = quizState.questions[quizState.idx];
+  const total = quizState.questions.length;
+  const color = TYPE_COLORS[q.type];
+  const pctW  = Math.round((quizState.idx / total) * 100);
+
+  box.innerHTML = `
+    <div class="quiz-header">
+      <span>Q ${quizState.idx + 1} / ${total} &nbsp;|&nbsp; Score: ${quizState.score}</span>
+      <div class="quiz-timer" id="quizTimerDisplay">⏱ --:--</div>
+      <button class="btn-exit" id="btnExit">✕ Exit</button>
+    </div>
+    <div class="progress-bar-wrap">
+      <div class="progress-bar-fill" style="width:${pctW}%"></div>
+    </div>
+    <div class="quiz-tag" style="background:${color}22;border:1px solid ${color}55;color:${color}">
+      ${TYPE_LABELS[q.type]} · ${q.level} · ${q.topic}
+    </div>
+    <div class="quiz-question" id="quizQuestionText">${q.question}</div>
+    <div id="quizInteractive"></div>
+    <div id="quizHintArea"></div>
+    <div id="quizAnswerBox"></div>
+    <div id="quizNext"></div>
+  `;
+
+  // Wire exit button
+  document.getElementById('btnExit').addEventListener('click', () => {
+    stopTimer();
+    modal.style.display = 'none';
+  });
+
+  // ① Render math in question text
+  renderMath(document.getElementById('quizQuestionText'));
+
+  // Render interactive part (MCQ / T-F / reveal)
+  renderQuizInteractive(q);
+
+  // ③ Start/resume timer display (don't restart interval if already running)
+  updateTimerDisplay();
+  if (!quizState.timerInterval) startTimer();
+}
+
+/* ══════════════════════════════════════════════════════════════════════════════
+   QUIZ — Interactive Question Area
+   ══════════════════════════════════════════════════════════════════════════════ */
+function renderQuizInteractive(q) {
+  const inter   = document.getElementById('quizInteractive');
+  const hintArea = document.getElementById('quizHintArea');
+  const ansBox  = document.getElementById('quizAnswerBox');
+  const nextBox = document.getElementById('quizNext');
+
+  // ── MCQ ──
+  if (q.type === 'mcq') {
+    inter.innerHTML = `<div class="mcq-options">${
+      q.options.map((opt, i) => {
+        let cls = 'mcq-btn';
+        if (quizState.answered) {
+          if (opt === q.answer)              cls += ' correct';
+          else if (opt === quizState.chosen) cls += ' incorrect';
+        } else if (opt === quizState.chosen) cls += ' selected';
+        const mark = quizState.answered ? (opt === q.answer ? ' ✓' : opt === quizState.chosen ? ' ✗' : '') : '';
+        return `<button class="${cls}" data-opt="${i}" ${quizState.answered ? 'disabled' : ''}>
+          <span style="color:#a78bfa;margin-right:10px">${String.fromCharCode(65+i)}.</span>${opt}${mark}
+        </button>`;
+      }).join('')
+    }</div>`;
+
+    if (!quizState.answered) {
+      inter.querySelectorAll('.mcq-btn').forEach((btn, i) => {
+        btn.addEventListener('click', () => handleAnswer(q.options[i], q));
+      });
+    }
+    renderMath(inter);
+
+  // ── TRUE / FALSE ──
+  } else if (q.type === 'tf') {
+    inter.innerHTML = `<div class="tf-options">${
+      ['True','False'].map(opt => {
+        let cls = 'tf-btn';
+        if (quizState.answered) {
+          if (opt === q.answer)              cls += ' correct';
+          else if (opt === quizState.chosen) cls += ' incorrect';
+        }
+        return `<button class="${cls}" data-opt="${opt}" ${quizState.answered ? 'disabled' : ''}>${opt}</button>`;
+      }).join('')
+    }</div>`;
+
+    if (!quizState.answered) {
+      inter.querySelectorAll('.tf-btn').forEach(btn => {
+        btn.addEventListener('click', () => handleAnswer(btn.dataset.opt, q));
+      });
+    }
+
+  // ── OTHER (complete / essay / match) ──
+  } else {
+    if (!quizState.answered) {
+      inter.innerHTML = `<button class="btn-primary btn-reveal-quiz" id="btnRevealQuiz">Reveal Answer</button>`;
+      document.getElementById('btnRevealQuiz').addEventListener('click', () => {
+        quizState.answered = true;
+        renderQuizInteractive(q);
+      });
+    }
+  }
+
+  // ── ANSWER BOX (after answering non-MCQ/TF types) ──
+  if (quizState.answered && ['complete','essay','match'].includes(q.type)) {
+    ansBox.innerHTML = `<div class="quiz-answer-box">✅ ${q.answer}</div>`;
+    renderMath(ansBox);
+  }
+
+  // ② HINT BUTTON in quiz (show only before answering)
+  if (q.hint && !quizState.answered) {
+    hintArea.innerHTML = `
+      <button class="quiz-hint-btn" id="quizHintBtn">
+        💡 ${quizState.hintShownInQuiz ? 'Hide Hint' : 'Need a Hint?'}
+      </button>
+      ${quizState.hintShownInQuiz ? `<div class="quiz-hint-box">${q.hint}</div>` : ''}
+    `;
+    document.getElementById('quizHintBtn').addEventListener('click', () => {
+      quizState.hintShownInQuiz = !quizState.hintShownInQuiz;
+      renderQuizInteractive(q);
+    });
+    renderMath(hintArea);
+  } else {
+    hintArea.innerHTML = '';
+  }
+
+  // ── NEXT / FINISH BUTTON ──
+  if (quizState.answered) {
+    const isLast = quizState.idx + 1 >= quizState.questions.length;
+    nextBox.innerHTML = `<button class="btn-primary btn-next" id="btnNext">${isLast ? 'Finish Quiz 🎓' : 'Next Question →'}</button>`;
+    document.getElementById('btnNext').addEventListener('click', () => {
+      if (isLast) {
+        quizState.finished = true;
+        renderQuiz();
+      } else {
+        quizState.idx++;
+        quizState.answered = false;
+        quizState.chosen   = null;
+        quizState.hintShownInQuiz = false;
+        renderQuiz();
+      }
+    });
+  }
+}
+
+/* ══════════════════════════════════════════════════════════════════════════════
+   QUIZ — Handle Answer Selection
+   ══════════════════════════════════════════════════════════════════════════════ */
+function handleAnswer(opt, q) {
+  if (quizState.answered) return;
+  quizState.chosen   = opt;
+  quizState.answered = true;
+  if (opt === q.answer) quizState.score++;
+  renderQuizInteractive(q);
+}
+
+/* ══════════════════════════════════════════════════════════════════════════════
+   BOOT — Initialize everything
+   ══════════════════════════════════════════════════════════════════════════════ */
+initHeader();
+initSelects();
+renderGrid();
+renderStatsRow(); // ③ Load saved stats on startup
+</script>
+<script defer src="https://static.cloudflareinsights.com/beacon.min.js/v8c78df7c7c0f484497ecbca7046644da1771523124516" integrity="sha512-8DS7rgIrAmghBFwoOTujcf6D9rXvH8xm8JQ1Ja01h9QX8EzXldiszufYa4IFfKdLUKTTrnSFXLDkUEOTrZQ8Qg==" data-cf-beacon='{"version":"2024.11.0","token":"4edd5f8ec12a48cfa682ab8261b80a79","server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}' crossorigin="anonymous"></script>
+</body>
+</html>
